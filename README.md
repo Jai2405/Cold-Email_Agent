@@ -1,8 +1,8 @@
-# Cold Email Agent - Multi-Agent System
+# Cold Email Agent
 
 A sophisticated AI-powered system for generating personalized internship cold emails using OpenAI's Agents SDK. This project demonstrates advanced agent collaboration with specialized agents for research, skills matching, email writing, and quality review.
 
-## 🚀 Features
+## Features
 
 - **Multi-Agent Architecture**: Uses 4 specialized agents working together
 - **Job Posting Analysis**: Automatically extracts key information from job postings
@@ -11,42 +11,42 @@ A sophisticated AI-powered system for generating personalized internship cold em
 - **Quality Review**: Ensures emails meet best practices
 - **Trace Monitoring**: View agent workflows in OpenAI's trace dashboard
 
-## 🏗️ Architecture
+## Architecture
 
 ### Agents
 
-1. **Research Agent** 🔍
+1. **Research Agent** 
    - Analyzes job postings
    - Extracts company info, role details, requirements
    - Identifies key talking points
 
-2. **Skills Matcher** 🎯
+2. **Skills Matcher** 
    - Compares your background to job requirements
    - Identifies most relevant projects/experiences
    - Highlights transferable skills
 
-3. **Email Writer** ✍️
+3. **Email Writer** 
    - Creates personalized email using research and skills analysis
    - Maintains friendly yet professional tone
    - Includes specific examples and connections
 
-4. **Review Agent** ✅
+4. **Review Agent** 
    - Reviews email for quality and effectiveness
    - Suggests improvements if needed
    - Ensures best practices are followed
 
-5. **Coordinator** 🎯
+5. **Coordinator** 
    - Orchestrates all agents in the correct order
    - Passes information between agents
    - Returns final polished email
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Python 3.8+
 - OpenAI API key
 - Jupyter Notebook (for running the demo)
 
-## 🛠️ Installation
+##  Installation
 
 1. **Clone the repository**
    ```bash
@@ -65,7 +65,7 @@ A sophisticated AI-powered system for generating personalized internship cold em
    OPENAI_API_KEY=your_openai_api_key_here
    ```
 
-## 🚀 Usage
+## Usage
 
 ### Quick Start
 
@@ -115,12 +115,12 @@ personal_info = {
 }
 ```
 
-## 📊 Monitoring
+## Monitoring
 
 View detailed traces of your agent workflows at:
 https://platform.openai.com/traces
 
-## 🔧 Customization
+## Customization
 
 ### Adding New Agents
 
@@ -147,7 +147,7 @@ tools.append(new_tool)
 
 Each agent's behavior can be customized by modifying their instructions in the notebook.
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -155,17 +155,17 @@ Each agent's behavior can be customized by modifying their instructions in the n
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## 📝License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with OpenAI's Agents SDK
 - Inspired by the multi-agent architecture patterns
 - Designed for internship seekers and career development
 
-## 📞 Support
+##  Support
 
 If you have any questions or need help:
 - Open an issue on GitHub
@@ -174,4 +174,4 @@ If you have any questions or need help:
 
 ---
 
-**Happy job hunting! 🎯** 
+**Happy job hunting! ** 
