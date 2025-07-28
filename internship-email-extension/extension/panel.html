@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Alchemy</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="panel-container">
+
+        
+        <div class="panel-content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="jobPosting">Job Posting</label>
+                    <textarea 
+                        id="jobPosting" 
+                        placeholder="Copy and paste the job posting text here..."
+                        rows="6"
+                    ></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="recipientEmail" class="recipient-label">To (Recipient Email)</label>
+                    <input 
+                        type="email" 
+                        id="recipientEmail" 
+                        placeholder="e.g., hiring@company.com or recruiter@company.com"
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label for="additionalContext">Additional Context (Optional)</label>
+                    <textarea 
+                        id="additionalContext" 
+                        placeholder="Add any additional context, notes, or specific points you want to include in the email..."
+                        rows="3"
+                    ></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button id="generateEmail" class="primary-btn">
+                        <span class="btn-text">Generate Email</span>
+                        <span class="loading-spinner" style="display: none;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                            </svg>
+                        </span>
+                    </button>
+                    <button id="clearAll" class="secondary-btn">Clear</button>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <h2>Generated Email</h2>
+                <div id="emailOutput" class="email-output">
+                    <div class="placeholder">
+                        <p>Your personalized internship email will appear here...</p>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <div class="button-row">
+                        <button id="openOutlookDesktop" class="secondary-btn" disabled>Outlook Desktop</button>
+                        <button id="openOutlookWeb" class="secondary-btn" disabled>Outlook Office 365</button>
+                    </div>
+                    <div class="button-row">
+                        <button id="addAttachment" class="secondary-btn">Add Attachment</button>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="existingEmail">Modification Instructions (Optional)</label>
+                    <textarea 
+                        id="existingEmail" 
+                        placeholder="Describe what you want to change or improve in the email (e.g., 'make it more formal', 'add more technical details', 'make it shorter', etc.)..."
+                        rows="3"
+                    ></textarea>
+                    <button id="regenerateWithModifications" class="secondary-btn" disabled>
+                        Regenerate with Modifications
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+    
+    <script src="panel.js"></script>
+</body>
+</html> 

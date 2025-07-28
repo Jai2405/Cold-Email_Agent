@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Internship Email Generator",
+  "version": "1.0",
+  "description": "Generate personalized cold emails for internship applications",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "sidePanel"
+  ],
+  "action": {
+    "default_title": "Generate Internship Email"
+  },
+  "side_panel": {
+    "default_path": "panel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["panel.html", "panel.js", "styles.css"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+} 
