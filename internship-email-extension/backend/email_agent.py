@@ -6,24 +6,6 @@ Handles the LLM-based email generation logic
 from agents import Agent, trace, Runner
 import re
 
-# Test mode - use dummy data instead of LLM calls
-TEST_MODE = False
-
-# Dummy email data for testing Outlook integration
-DUMMY_SUBJECT = "Enthusiastic Applicant for Research Engineer Intern Position"
-
-DUMMY_BODY = """Dear TensorStax Team,
-
-My name is Jai Vaderaa, and I am currently pursuing a Mathematics degree at the University of Waterloo, expecting to graduate in 2027. I'm reaching out to express my enthusiasm for the Research Engineer Intern position focused on Data Engineering Environments. Your mission to innovate in the realm of autonomous agents for data engineering resonates deeply with my interests and skills.
-
-With hands-on experience in Python and project work that includes optimizing class schedules using React and Node.js, I have developed a strong foundation in building scalable applications. My recent role as a Systems Analyst at Fairfax Financial Holdings further enhanced my ability to analyze data and create efficient algorithms, making me feel well-prepared to help build and maintain simulated environments for AI training at TensorStax. I am particularly drawn to the collaborative research efforts and the opportunity to work on real-world data stack components like Airflow and Spark.
-
-Could we possibly discuss any internship opportunities available at TensorStax? I am eager to learn from your talented team and contribute to your exciting projects.
-
-Thank you for considering my request. I look forward to the possibility of working together!
-
-Best regards,  
-Jai Vaderaa"""
 
 # Personal info template
 PERSONAL_INFO = {

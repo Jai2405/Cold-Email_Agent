@@ -6,9 +6,6 @@ class JobPostingExtractor {
     }
 
     init() {
-        // Add a floating button to extract job posting
-        this.addExtractButton();
-        
         // Listen for messages from the extension
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             if (request.action === 'extractJobPosting') {
@@ -16,90 +13,6 @@ class JobPostingExtractor {
                 sendResponse({ success: true, text: extractedText });
             }
         });
-    }
-
-    addExtractButton() {
-        // Create floating extract button
-        const extractButton = document.createElement('div');
-        extractButton.id = 'email-generator-extract-btn';
-        extractButton.innerHTML = `
-            <div class="extract-btn-content">
-                <span>📧</span>
-                <span class="extract-text">Extract Job Posting</span>
-            </div>
-        `;
-        
-        // Add styles
-        const style = document.createElement('style');
-        style.textContent = `
-            #email-generator-extract-btn {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 12px 16px;
-                border-radius: 25px;
-                cursor: pointer;
-                z-index: 10000;
-                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-                transition: all 0.3s ease;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                font-size: 14px;
-                font-weight: 500;
-            }
-            
-            #email-generator-extract-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-            }
-            
-            .extract-btn-content {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-            
-            .extract-text {
-                white-space: nowrap;
-            }
-            
-            @media (max-width: 768px) {
-                .extract-text {
-                    display: none;
-                }
-                
-                #email-generator-extract-btn {
-                    padding: 12px;
-                    border-radius: 50%;
-                }
-            }
-        `;
-        
-        document.head.appendChild(style);
-        document.body.appendChild(extractButton);
-        
-        // Add click handler
-        extractButton.addEventListener('click', () => {
-            this.handleExtractClick();
-        });
-    }
-
-    handleExtractClick() {
-        const jobPosting = this.extractJobPosting();
-        
-        if (jobPosting) {
-            // Show success message
-            this.showNotification('Job posting extracted! Click the extension icon to generate email.', 'success');
-            
-            // Store the extracted text for the panel to access
-            chrome.storage.local.set({ 
-                extractedJobPosting: jobPosting,
-                extractionTime: new Date().toISOString()
-            });
-        } else {
-            this.showNotification('No job posting found on this page. Please select the text manually.', 'error');
-        }
     }
 
     extractJobPosting() {
@@ -172,73 +85,6 @@ class JobPostingExtractor {
             .replace(/\s+/g, ' ') // Replace multiple spaces with single space
             .replace(/\n\s*\n/g, '\n') // Replace multiple newlines with single newline
             .trim();
-    }
-
-    showNotification(message, type = 'info') {
-        // Remove existing notification
-        const existing = document.getElementById('email-generator-notification');
-        if (existing) {
-            existing.remove();
-        }
-
-        // Create notification
-        const notification = document.createElement('div');
-        notification.id = 'email-generator-notification';
-        notification.textContent = message;
-        notification.className = `email-generator-notification ${type}`;
-        
-        // Add notification styles
-        const style = document.createElement('style');
-        style.textContent = `
-            .email-generator-notification {
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                padding: 12px 16px;
-                border-radius: 8px;
-                color: white;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                font-size: 14px;
-                font-weight: 500;
-                z-index: 10001;
-                max-width: 300px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                animation: slideIn 0.3s ease;
-            }
-            
-            .email-generator-notification.success {
-                background: #28a745;
-            }
-            
-            .email-generator-notification.error {
-                background: #dc3545;
-            }
-            
-            .email-generator-notification.info {
-                background: #17a2b8;
-            }
-            
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-        `;
-        
-        document.head.appendChild(style);
-        document.body.appendChild(notification);
-        
-        // Auto-remove after 3 seconds
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 3000);
     }
 }
 
