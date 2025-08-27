@@ -6,7 +6,8 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "sidePanel"
+    "sidePanel",
+    "storage"
   ],
   "action": {
     "default_title": "Generate Internship Email"

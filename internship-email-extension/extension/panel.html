@@ -11,12 +11,18 @@
 </head>
 <body>
     <div class="panel-container">
-
+        <div class="panel-header">
+            <h1>Email Alchemy</h1>
+            <button id="updateInfoBtn" class="info-btn">
+                <span>⚙️</span>
+                <span>Update Info</span>
+            </button>
+        </div>
         
-        <div class="panel-content">
+        <div class="panel-content" id="mainContent">
             <div class="input-section">
                 <div class="input-group">
-                    <label for="jobPosting">Job Posting</label>
+                    <label for="jobPosting">Job Posting *</label>
                     <textarea 
                         id="jobPosting" 
                         placeholder="Copy and paste the job posting text here..."
@@ -25,7 +31,7 @@
                 </div>
                 
                 <div class="input-group">
-                    <label for="recipientEmail" class="recipient-label">To (Recipient Email)</label>
+                    <label for="recipientEmail" class="recipient-label">To (Recipient Email) *</label>
                     <input 
                         type="email" 
                         id="recipientEmail" 
@@ -34,7 +40,7 @@
                 </div>
                 
                 <div class="input-group">
-                    <label for="additionalContext">Additional Context (Optional)</label>
+                    <label for="additionalContext">Additional Instructions</label>
                     <textarea 
                         id="additionalContext" 
                         placeholder="Add any additional context ..."
@@ -74,7 +80,7 @@
                 </div>
                 
                 <div class="input-group">
-                    <label for="existingEmail">Modification Instructions (Optional)</label>
+                    <label for="existingEmail">Modification Instructions</label>
                     <textarea 
                         id="existingEmail" 
                         placeholder="Describe what you want to change or improve in the email ..."
@@ -87,8 +93,125 @@
             </div>
         </div>
         
+        <!-- Personal Info Form (initially hidden) -->
+        <div class="panel-content" id="personalInfoContent" style="display: none;">
+            <div class="form-section">
+                <div class="form-header">
+                    <button id="backToMain" class="back-btn">
+                        <span>←</span>
+                        <span>Back to Email Generator</span>
+                    </button>
+                </div>
+                
+                <form id="personalInfoForm">
+                    <!-- Basic Information Section -->
+                    <div class="form-section-header">
+                        <h3>Basic Information</h3>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" placeholder="e.g., John Doe" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" placeholder="your.email@university.edu" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="university">University *</label>
+                            <input type="text" id="university" name="university" placeholder="e.g., University of Waterloo" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="degree">Degree/Major *</label>
+                            <input type="text" id="degree" name="degree" placeholder="e.g., Computer Science" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="skills">Skills</label>
+                        <textarea id="skills" name="skills" placeholder="e.g., Python, JavaScript, React, SQL, Machine Learning" rows="3"></textarea>
+                        <div class="field-hint">Separate skills with commas</div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="linkedin">LinkedIn URL</label>
+                            <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/yourusername">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="github">GitHub URL</label>
+                            <input type="url" id="github" name="github" placeholder="https://github.com/yourusername">
+                        </div>
+                    </div>
+                    
+                    <!-- Experience Section -->
+                    <div class="form-section-header">
+                        <h3>Work Experience</h3>
+                        <p class="section-description">Add your relevant work experience and internships</p>
+                    </div>
+                    
+                    <div id="experienceContainer">
+                        <div class="experience-item">
+                            <div class="exp-fields">
+                                <div class="exp-field">
+                                    <label>Role/Position</label>
+                                    <input type="text" name="expRole[]" placeholder="e.g., Software Engineer Intern" class="exp-role">
+                                </div>
+                                <div class="exp-field">
+                                    <label>Company</label>
+                                    <input type="text" name="expCompany[]" placeholder="e.g., Google" class="exp-company">
+                                </div>
+                                <div class="exp-field">
+                                    <label>Summary</label>
+                                    <textarea name="expSummary[]" placeholder="Brief summary of your responsibilities and achievements" class="exp-summary" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <button type="button" class="remove-exp-btn" onclick="removeExperience(this)">×</button>
+                        </div>
+                    </div>
+                    <button type="button" id="addExperience" class="add-btn">+ Add Experience</button>
+                    
+                    <!-- Projects Section -->
+                    <div class="form-section-header">
+                        <h3>Projects</h3>
+                        <p class="section-description">Add your notable projects and achievements</p>
+                    </div>
+                    
+                    <div id="projectsContainer">
+                        <div class="project-item">
+                            <div class="proj-fields">
+                                <div class="proj-field">
+                                    <label>Project Name</label>
+                                    <input type="text" name="projName[]" placeholder="e.g., E-commerce Platform" class="proj-name">
+                                </div>
+                                <div class="proj-field">
+                                    <label>Description</label>
+                                    <textarea name="projDesc[]" placeholder="Brief description of the project, technologies used, and your role" class="proj-desc" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <button type="button" class="remove-proj-btn" onclick="removeProject(this)">×</button>
+                        </div>
+                    </div>
+                    <button type="button" id="addProject" class="add-btn">+ Add Project</button>
+                    
+                    <div class="form-actions">
+                        <button id="savePersonalInfo" class="primary-btn">Save Information</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
         <div id="statusMessage" class="status-message"></div>
     </div>
+    
+
     
     <script src="panel.js"></script>
 </body>

@@ -18,10 +18,22 @@ class EmailGeneratorPanel {
         this.openOutlookWebButton = document.getElementById('openOutlookWeb');
         this.openOutlookDesktopButton = document.getElementById('openOutlookDesktop');
         this.addAttachmentButton = document.getElementById('addAttachment');
+        this.updateInfoButton = document.getElementById('updateInfoBtn');
         this.emailOutput = document.getElementById('emailOutput');
         this.statusMessage = document.getElementById('statusMessage');
         this.btnText = this.generateButton.querySelector('.btn-text');
         this.loadingSpinner = this.generateButton.querySelector('.loading-spinner');
+        
+        // Panel content elements
+        this.mainContent = document.getElementById('mainContent');
+        this.personalInfoContent = document.getElementById('personalInfoContent');
+        this.backToMainBtn = document.getElementById('backToMain');
+        this.savePersonalInfoBtn = document.getElementById('savePersonalInfo');
+        this.personalInfoForm = document.getElementById('personalInfoForm');
+        this.addExperienceBtn = document.getElementById('addExperience');
+        this.addProjectBtn = document.getElementById('addProject');
+        this.experienceContainer = document.getElementById('experienceContainer');
+        this.projectsContainer = document.getElementById('projectsContainer');
     }
 
     bindEvents() {
@@ -31,6 +43,13 @@ class EmailGeneratorPanel {
         this.openOutlookWebButton.addEventListener('click', () => this.openInOutlookWeb());
         this.openOutlookDesktopButton.addEventListener('click', () => this.openInOutlookDesktop());
         this.addAttachmentButton.addEventListener('click', () => this.addAttachment());
+        this.updateInfoButton.addEventListener('click', () => this.showUpdateInfoModal());
+        
+        // Panel switching events
+        this.backToMainBtn.addEventListener('click', () => this.showMainContent());
+        this.savePersonalInfoBtn.addEventListener('click', () => this.savePersonalInfo());
+        this.addExperienceBtn.addEventListener('click', () => this.addExperienceItem());
+        this.addProjectBtn.addEventListener('click', () => this.addProjectItem());
         
         // Auto-resize textareas
         this.jobPostingTextarea.addEventListener('input', () => {
@@ -68,12 +87,24 @@ class EmailGeneratorPanel {
         this.showStatus('Generating your personalized email...', 'info');
 
         try {
+            // Get personal info from Chrome storage
+            const result = await chrome.storage.local.get(['personalInfo']);
+            const personalInfo = result.personalInfo || null;
+            
+            console.log("🔍 DEBUG: Retrieved personal info for email generation:", personalInfo);
+
             const requestBody = { job_posting: jobPosting };
             if (additionalContext) {
                 requestBody.additional_context = additionalContext;
             }
             if (existingEmail) {
                 requestBody.existing_email = existingEmail;
+            }
+            if (personalInfo) {
+                requestBody.personal_info = personalInfo;
+                console.log("✅ Personal info will be included in email generation");
+            } else {
+                console.log("⚠️ No personal info found, using default");
             }
             
             const response = await fetch(`${this.backendUrl}/generate-email`, {
@@ -332,6 +363,182 @@ class EmailGeneratorPanel {
 
     hideStatus() {
         this.statusMessage.style.display = 'none';
+    }
+
+    showUpdateInfoModal() {
+        this.loadPersonalInfo();
+        this.mainContent.style.display = 'none';
+        this.personalInfoContent.style.display = 'block';
+    }
+
+    showMainContent() {
+        this.mainContent.style.display = 'block';
+        this.personalInfoContent.style.display = 'none';
+    }
+
+    async loadPersonalInfo() {
+        try {
+            // Try to load from Chrome storage first
+            const result = await chrome.storage.local.get(['personalInfo']);
+            if (result.personalInfo) {
+                this.populateForm(result.personalInfo);
+                return;
+            }
+
+            // If not in storage, try to load from backend
+            const response = await fetch(`${this.backendUrl}/personal-info`);
+            if (response.ok) {
+                const data = await response.json();
+                this.populateForm(data);
+            }
+        } catch (error) {
+            console.log('No existing personal info found, starting with empty form');
+        }
+    }
+
+    populateForm(data) {
+        // Basic fields
+        document.getElementById('name').value = data.name || '';
+        document.getElementById('university').value = data.university || '';
+        document.getElementById('degree').value = data.degree || '';
+        document.getElementById('skills').value = Array.isArray(data.skills) ? data.skills.join(', ') : '';
+        document.getElementById('linkedin').value = data.linkedin || '';
+        document.getElementById('github').value = data.github || '';
+        document.getElementById('email').value = data.email || '';
+
+        // Experience
+        this.experienceContainer.innerHTML = '';
+        if (data.experience && data.experience.length > 0) {
+            data.experience.forEach(exp => {
+                this.addExperienceItem(exp.role, exp.company, exp.summary);
+            });
+        } else {
+            this.addExperienceItem(); // Add one empty item
+        }
+
+        // Projects
+        this.projectsContainer.innerHTML = '';
+        if (data.projects && data.projects.length > 0) {
+            data.projects.forEach(proj => {
+                this.addProjectItem(proj.name, proj.description);
+            });
+        } else {
+            this.addProjectItem(); // Add one empty item
+        }
+    }
+
+    addExperienceItem(role = '', company = '', summary = '') {
+        const experienceItem = document.createElement('div');
+        experienceItem.className = 'experience-item';
+        experienceItem.innerHTML = `
+            <div class="exp-fields">
+                <div class="exp-field">
+                    <label>Role/Position</label>
+                    <input type="text" name="expRole[]" placeholder="e.g., Software Engineer Intern" class="exp-role" value="${role}">
+                </div>
+                <div class="exp-field">
+                    <label>Company</label>
+                    <input type="text" name="expCompany[]" placeholder="e.g., Google" class="exp-company" value="${company}">
+                </div>
+                <div class="exp-field">
+                    <label>Summary</label>
+                    <textarea name="expSummary[]" placeholder="Brief summary of your responsibilities and achievements" class="exp-summary" rows="3">${summary}</textarea>
+                </div>
+            </div>
+            <button type="button" class="remove-exp-btn" onclick="this.parentElement.remove()">×</button>
+        `;
+        this.experienceContainer.appendChild(experienceItem);
+    }
+
+    addProjectItem(name = '', description = '') {
+        const projectItem = document.createElement('div');
+        projectItem.className = 'project-item';
+        projectItem.innerHTML = `
+            <div class="proj-fields">
+                <div class="proj-field">
+                    <label>Project Name</label>
+                    <input type="text" name="projName[]" placeholder="e.g., E-commerce Platform" class="proj-name" value="${name}">
+                </div>
+                <div class="proj-field">
+                    <label>Description</label>
+                    <textarea name="projDesc[]" placeholder="Brief description of the project, technologies used, and your role" class="proj-desc" rows="3">${description}</textarea>
+                </div>
+            </div>
+            <button type="button" class="remove-proj-btn" onclick="this.parentElement.remove()">×</button>
+        `;
+        this.projectsContainer.appendChild(projectItem);
+    }
+
+    async savePersonalInfo() {
+        const formData = new FormData(this.personalInfoForm);
+        
+        // Collect basic info
+        const personalInfo = {
+            name: formData.get('name'),
+            university: formData.get('university'),
+            degree: formData.get('degree'),
+            skills: formData.get('skills').split(',').map(skill => skill.trim()).filter(skill => skill),
+            linkedin: formData.get('linkedin'),
+            github: formData.get('github'),
+            email: formData.get('email')
+        };
+
+        // Debug print
+        console.log("🔍 DEBUG: Saving personal info:", personalInfo);
+
+        // Collect experience
+        const expRoles = formData.getAll('expRole[]');
+        const expCompanies = formData.getAll('expCompany[]');
+        const expSummaries = formData.getAll('expSummary[]');
+        personalInfo.experience = [];
+        for (let i = 0; i < expRoles.length; i++) {
+            if (expRoles[i] && expCompanies[i]) {
+                personalInfo.experience.push({
+                    role: expRoles[i],
+                    company: expCompanies[i],
+                    summary: expSummaries[i] || ''
+                });
+            }
+        }
+
+        // Collect projects
+        const projNames = formData.getAll('projName[]');
+        const projDescs = formData.getAll('projDesc[]');
+        personalInfo.projects = [];
+        for (let i = 0; i < projNames.length; i++) {
+            if (projNames[i] && projDescs[i]) {
+                personalInfo.projects.push({
+                    name: projNames[i],
+                    description: projDescs[i]
+                });
+            }
+        }
+
+        try {
+            // Save to Chrome storage
+            console.log("💾 Saving to Chrome storage...");
+            await chrome.storage.local.set({ personalInfo: personalInfo });
+            console.log("✅ Saved to Chrome storage successfully");
+            
+            // Save to backend
+            console.log("💾 Saving to backend...");
+            const response = await fetch(`${this.backendUrl}/update-personal-info`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(personalInfo)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save to backend');
+            }
+            console.log("✅ Saved to backend successfully");
+
+            this.showStatus('Personal information saved successfully!', 'success');
+            this.showMainContent();
+        } catch (error) {
+            console.error('Error saving personal info:', error);
+            this.showStatus('Error saving personal information', 'error');
+        }
     }
 }
 

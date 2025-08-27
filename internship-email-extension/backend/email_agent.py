@@ -7,24 +7,8 @@ from agents import Agent, trace, Runner
 import re
 
 
-# Personal info template
-PERSONAL_INFO = {
-  "name": "Jai Vaderaa",
-  "degree": "Mathematics (University of Waterloo)",
-  "skills": ["Python", "JavaScript", "React", "Node.js", "AI Agents", "LLM's", "AI engineering", "SQL", "Data Engineering"],
-  "experience": [
-    {
-      "role": "AI Engineering Intern",
-      "company": "Swif.ai"
-    },
-    {
-      "role": "Business Systems Analyst",
-      "company": "Fairfax Financial"
-    }
-  ],
-  "linkedin": "https://www.linkedin.com/in/jaivaderaa/",
-  "github": "https://github.com/Jai2405"
-}
+# No hardcoded personal info - all data comes from user input
+CURRENT_PERSONAL_INFO = {}  # Will be updated when user saves their info
 
 
 # Email generation instructions
@@ -80,17 +64,66 @@ async def generate_internship_email(job_posting_text, personal_info=None, additi
     Returns:
         dict: Dictionary with 'subject' and 'body' keys
     """
+
     
-    if TEST_MODE:
-        print("🧪 TEST MODE: Returning dummy email data")
-        return {
-            'subject': DUMMY_SUBJECT,
-            'body': DUMMY_BODY
-        }
-    
-    # Use provided personal info or default
+    # Check if personal info is provided
     if personal_info is None:
-        personal_info = PERSONAL_INFO
+        # Try to use session-stored personal info
+        if CURRENT_PERSONAL_INFO:
+            print("📝 Using session-stored personal info")
+            personal_info = CURRENT_PERSONAL_INFO
+        else:
+            print("⚠️ WARNING: No personal info provided. Email will be generic.")
+            personal_info = {}
+    
+    # Debug print to see what personal info we're using
+    print("🔍 DEBUG: Personal info being used for email generation:")
+    print(f"   Name: {personal_info.get('name', 'Not set')}")
+    print(f"   University: {personal_info.get('university', 'Not set')}")
+    print(f"   Skills: {personal_info.get('skills', [])}")
+    print(f"   Experience: {personal_info.get('experience', [])}")
+    print(f"   Projects: {personal_info.get('projects', [])}")
+    print(f"   LinkedIn: {personal_info.get('linkedin', 'Not set')}")
+    print(f"   GitHub: {personal_info.get('github', 'Not set')}")
+    
+    # Build candidate info section based on available data
+    candidate_info_parts = []
+    
+    if personal_info.get('name'):
+        candidate_info_parts.append(f"Name: {personal_info['name']}")
+    if personal_info.get('university') and personal_info.get('degree'):
+        candidate_info_parts.append(f"Education: {personal_info['degree']} at {personal_info['university']}")
+    elif personal_info.get('university'):
+        candidate_info_parts.append(f"University: {personal_info['university']}")
+    elif personal_info.get('degree'):
+        candidate_info_parts.append(f"Degree: {personal_info['degree']}")
+    if personal_info.get('skills'):
+        candidate_info_parts.append(f"Skills: {', '.join(personal_info['skills'])}")
+    if personal_info.get('linkedin'):
+        candidate_info_parts.append(f"LinkedIn: {personal_info['linkedin']}")
+    if personal_info.get('github'):
+        candidate_info_parts.append(f"GitHub: {personal_info['github']}")
+    
+    candidate_info = '\n'.join(candidate_info_parts) if candidate_info_parts else "No personal information provided"
+    
+    # Build experience section
+    if personal_info.get('experience'):
+        experience_text = '\n'.join([
+            f"- {e.get('role', 'Role')} at {e.get('company', 'Company')}" + 
+            (f": {e.get('summary', '')}" if e.get('summary') else "")
+            for e in personal_info['experience']
+        ])
+    else:
+        experience_text = "No experience listed"
+    
+    # Build projects section
+    if personal_info.get('projects'):
+        projects_text = '\n'.join([
+            f"- {p.get('name', 'Project')}: {p.get('description', 'Description')}" 
+            for p in personal_info['projects']
+        ])
+    else:
+        projects_text = "No projects listed"
     
     prompt = f"""
     Based on the following job posting and candidate profile, write a personalized cold email for an internship opportunity.
@@ -99,23 +132,13 @@ async def generate_internship_email(job_posting_text, personal_info=None, additi
     {job_posting_text}
 
     **Candidate Info:**
-    Name: {personal_info['name']}
-    University: {personal_info['degree']}
-    Skills: {', '.join(personal_info['skills'])}
-    LinkedIn: {personal_info['linkedin']}
-    GitHub: {personal_info.get('github')}
+    {candidate_info}
 
-    Experience:
-    {chr(10).join([
-        f"- {e.get('role')} at {e.get('company')} ({e.get('duration', 'N/A')}): {e.get('description', '')}" 
-        for e in personal_info.get('experience', [])
-    ])}
+    **Experience:**
+    {experience_text}
 
-    Projects:
-    {chr(10).join([
-        f"- {p.get('name')}: {p.get('description')} (Tech: {', '.join(p.get('technologies', []))})" 
-        for p in personal_info.get('projects', [])
-    ])}
+    **Projects:**
+    {projects_text}
 
     {f"{chr(10)}# Additional Instructions:{chr(10)}{additional_context.strip()}" if additional_context else ""}
     {f"{chr(10)}# Modification Instructions:{chr(10)}{existing_email.strip()}" if existing_email else ""}
@@ -151,8 +174,13 @@ async def generate_internship_email(job_posting_text, personal_info=None, additi
 
 def get_personal_info():
     """Return personal info for debugging"""
-    return PERSONAL_INFO
+    # Return empty dict since we no longer have hardcoded personal info
+    return {}
 
-def is_test_mode():
-    """Check if test mode is enabled"""
-    return TEST_MODE 
+def update_personal_info(new_info):
+    """Update the global personal info with new data"""
+    # Store personal info in a global variable for this session
+    global CURRENT_PERSONAL_INFO
+    CURRENT_PERSONAL_INFO = new_info
+    print(f"✅ Personal info updated: {new_info.get('name', 'Unknown')}")
+
