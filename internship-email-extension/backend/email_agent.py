@@ -70,84 +70,63 @@ async def generate_internship_email(job_posting_text, personal_info=None, additi
     if personal_info is None:
         # Try to use session-stored personal info
         if CURRENT_PERSONAL_INFO:
-            print("📝 Using session-stored personal info")
+    
             personal_info = CURRENT_PERSONAL_INFO
         else:
-            print("⚠️ WARNING: No personal info provided. Email will be generic.")
+    
             personal_info = {}
     
     # Debug print to see what personal info we're using
-    print("🔍 DEBUG: Personal info being used for email generation:")
-    print(f"   Name: {personal_info.get('name', 'Not set')}")
-    print(f"   University: {personal_info.get('university', 'Not set')}")
-    print(f"   Skills: {personal_info.get('skills', [])}")
-    print(f"   Experience: {personal_info.get('experience', [])}")
-    print(f"   Projects: {personal_info.get('projects', [])}")
-    print(f"   LinkedIn: {personal_info.get('linkedin', 'Not set')}")
-    print(f"   GitHub: {personal_info.get('github', 'Not set')}")
+
     
-    # Build candidate info section based on available data
-    candidate_info_parts = []
+    # Build personal info as JSON
+    import json
     
-    if personal_info.get('name'):
-        candidate_info_parts.append(f"Name: {personal_info['name']}")
-    if personal_info.get('university') and personal_info.get('degree'):
-        candidate_info_parts.append(f"Education: {personal_info['degree']} at {personal_info['university']}")
-    elif personal_info.get('university'):
-        candidate_info_parts.append(f"University: {personal_info['university']}")
-    elif personal_info.get('degree'):
-        candidate_info_parts.append(f"Degree: {personal_info['degree']}")
-    if personal_info.get('skills'):
-        candidate_info_parts.append(f"Skills: {', '.join(personal_info['skills'])}")
-    if personal_info.get('linkedin'):
-        candidate_info_parts.append(f"LinkedIn: {personal_info['linkedin']}")
-    if personal_info.get('github'):
-        candidate_info_parts.append(f"GitHub: {personal_info['github']}")
+    # Create a clean JSON structure for personal info
+    personal_info_json = {
+        "basic_info": {
+            "name": personal_info.get('name', ''),
+            "email": personal_info.get('email', ''),
+            "university": personal_info.get('university', ''),
+            "degree": personal_info.get('degree', ''),
+            "linkedin": personal_info.get('linkedin', ''),
+            "github": personal_info.get('github', '')
+        },
+        "skills": personal_info.get('skills', []),
+        "experience": personal_info.get('experience', []),
+        "projects": personal_info.get('projects', [])
+    }
     
-    candidate_info = '\n'.join(candidate_info_parts) if candidate_info_parts else "No personal information provided"
-    
-    # Build experience section
-    if personal_info.get('experience'):
-        experience_text = '\n'.join([
-            f"- {e.get('role', 'Role')} at {e.get('company', 'Company')}" + 
-            (f": {e.get('summary', '')}" if e.get('summary') else "")
-            for e in personal_info['experience']
-        ])
-    else:
-        experience_text = "No experience listed"
-    
-    # Build projects section
-    if personal_info.get('projects'):
-        projects_text = '\n'.join([
-            f"- {p.get('name', 'Project')}: {p.get('description', 'Description')}" 
-            for p in personal_info['projects']
-        ])
-    else:
-        projects_text = "No projects listed"
+    # Convert to formatted JSON string
+    personal_info_json_str = json.dumps(personal_info_json, indent=2)
     
     prompt = f"""
     Based on the following job posting and candidate profile, write a personalized cold email for an internship opportunity.
 
-    **Job Posting:**
+    Here is the job posting:
     {job_posting_text}
 
-    **Candidate Info:**
-    {candidate_info}
+    Here is the candidate profile:
+    {personal_info_json_str}
 
-    **Experience:**
-    {experience_text}
+    {f"{chr(10)}Here are additional instructions:{chr(10)}{additional_context.strip()}" if additional_context else ""}
 
-    **Projects:**
-    {projects_text}
+    {f"{chr(10)}Here are modification instructions:{chr(10)}{existing_email.strip()}" if existing_email else ""}
 
-    {f"{chr(10)}# Additional Instructions:{chr(10)}{additional_context.strip()}" if additional_context else ""}
-    {f"{chr(10)}# Modification Instructions:{chr(10)}{existing_email.strip()}" if existing_email else ""}
+    Now generate the email.
 
     Output format:
     Subject: [subject line]
 
     [email body]
     """
+    
+    # Print the full prompt that gets sent to the agent
+    print("=" * 80)
+    print("FULL PROMPT SENT TO AGENT:")
+    print("=" * 80)
+    print(prompt)
+    print("=" * 80)
 
 
 
@@ -182,5 +161,5 @@ def update_personal_info(new_info):
     # Store personal info in a global variable for this session
     global CURRENT_PERSONAL_INFO
     CURRENT_PERSONAL_INFO = new_info
-    print(f"✅ Personal info updated: {new_info.get('name', 'Unknown')}")
+
 

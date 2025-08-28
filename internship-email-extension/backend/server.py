@@ -34,12 +34,7 @@ def generate_email():
         personal_info = data.get('personal_info', None)  # New: accept personal info from frontend
         
         # Debug print
-        print("📧 DEBUG: Email generation request received:")
-        print(f"   Job posting length: {len(job_posting) if job_posting else 0}")
-        print(f"   Personal info provided: {personal_info is not None}")
-        if personal_info:
-            print(f"   Name: {personal_info.get('name', 'Not set')}")
-            print(f"   University: {personal_info.get('university', 'Not set')}")
+
         
         if not job_posting:
             return jsonify({'error': 'No job posting provided'}), 400
@@ -64,7 +59,7 @@ def generate_email():
             loop.close()
         
     except Exception as e:
-        print(f"Error generating email: {e}")
+
         return jsonify({'error': str(e)}), 500
 
 @app.route('/personal-info', methods=['GET'])
@@ -82,13 +77,7 @@ def update_personal_info_route():
             return jsonify({'error': 'No data provided'}), 400
         
         # Debug print
-        print("💾 DEBUG: Personal info update request received:")
-        print(f"   Data received: {data}")
-        print(f"   Name: {data.get('name', 'Not set')}")
-        print(f"   University: {data.get('university', 'Not set')}")
-        print(f"   Skills: {data.get('skills', [])}")
-        print(f"   Experience count: {len(data.get('experience', []))}")
-        print(f"   Projects count: {len(data.get('projects', []))}")
+
         
         # Update the personal info in email_agent.py
         from email_agent import update_personal_info
@@ -100,12 +89,9 @@ def update_personal_info_route():
         })
         
     except Exception as e:
-        print(f"Error updating personal info: {e}")
+
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    print("🚀 Starting Internship Email Generator API server...")
-    print("📝 Make sure your OPENAI_API_KEY is set in your .env file")
-    print("🌐 Server will run on http://localhost:8000")
-    print("📊 Check traces at https://platform.openai.com/traces")
+    
     app.run(host='0.0.0.0', port=8000, debug=True) 

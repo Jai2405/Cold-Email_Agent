@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Internship Email Generator",
+  "name": "Cold Email Assistant",
   "version": "1.0",
   "description": "Generate personalized cold emails for internship applications",
   "permissions": [
@@ -10,7 +10,19 @@
     "storage"
   ],
   "action": {
-    "default_title": "Generate Internship Email"
+    "default_title": "Generate cold emails",
+    "default_icon": {
+      "16": "email-svgrepo-com.png",
+      "32": "email-svgrepo-com.png",
+      "48": "email-svgrepo-com.png",
+      "128": "email-svgrepo-com.png"
+    }
+  },
+  "icons": {
+    "16": "email-svgrepo-com.png",
+    "32": "email-svgrepo-com.png",
+    "48": "email-svgrepo-com.png",
+    "128": "email-svgrepo-com.png"
   },
   "side_panel": {
     "default_path": "panel.html"

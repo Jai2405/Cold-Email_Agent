@@ -21,47 +21,7 @@ body {
     flex-direction: column;
 }
 
-/* Panel header */
-.panel-header {
-    background: #ffffff;
-    padding: 16px 20px;
-    border-bottom: 1px solid #e5e7eb;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
 
-.panel-header h1 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-}
-
-.info-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    background: #f3f4f6;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    color: #374151;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.info-btn:hover {
-    background: #e5e7eb;
-    border-color: #9ca3af;
-}
-
-.info-btn span:first-child {
-    font-size: 14px;
-}
 
 /* Content area */
 .panel-content {
@@ -77,6 +37,7 @@ body {
     padding: 20px;
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 .input-section h2, .output-section h2 {
@@ -130,7 +91,7 @@ textarea, input[type="email"] {
 }
 
 textarea {
-    min-height: 120px;
+    min-height: 180px;
     line-height: 1.5;
 }
 
@@ -151,15 +112,44 @@ textarea::placeholder, input[type="email"]::placeholder {
     margin-bottom: 16px;
     align-items: center;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     width: 100%;
 }
 
+/* Update Info header */
+.update-info-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.update-info-btn {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.update-info-btn:hover {
+    background: #f8fafc;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+
+
 /* Button styles */
 .primary-btn, .secondary-btn {
-    padding: 10px 12px;
+    padding: 12px 16px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -168,17 +158,21 @@ textarea::placeholder, input[type="email"]::placeholder {
     align-items: center;
     justify-content: center;
     gap: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     white-space: nowrap;
-    height: 40px;
+    height: 44px;
     min-width: 0;
+    background-color: #ffffff;
+    color: #374151;
+    border: 1px solid #e5e7eb;
 }
 
 .primary-btn {
-    background-color: #f3f4f6;
+    background-color: #ffffff;
     color: #374151;
     flex: 1;
     min-width: 0;
+    border: 1px solid #d1d5db;
 }
 
 .secondary-btn {
@@ -186,12 +180,14 @@ textarea::placeholder, input[type="email"]::placeholder {
     color: #374151;
     border: 1px solid #d1d5db;
     flex-shrink: 0;
+    min-width: fit-content;
 }
 
 .primary-btn:hover:not(:disabled) {
-    background-color: #e5e7eb;
+    background-color: #f8fafc;
+    border-color: #9ca3af;
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 .primary-btn:disabled {
@@ -199,19 +195,14 @@ textarea::placeholder, input[type="email"]::placeholder {
     color: #9ca3af;
     cursor: not-allowed;
     transform: none;
-}
-
-.secondary-btn {
-    background-color: #ffffff;
-    color: #374151;
-    border: 1px solid #d1d5db;
+    border-color: #e5e7eb;
 }
 
 .secondary-btn:hover:not(:disabled) {
-    background-color: #f9fafb;
+    background-color: #f8fafc;
     border-color: #9ca3af;
     transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 .secondary-btn:disabled {
@@ -386,23 +377,31 @@ textarea::placeholder, input[type="email"]::placeholder {
 
 .remove-exp-btn,
 .remove-proj-btn {
-    background: #ef4444;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    width: 24px;
-    height: 24px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #ffffff;
+    color: #ef4444;
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .remove-exp-btn:hover,
 .remove-proj-btn:hover {
-    background: #dc2626;
+    background: #ef4444;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
 }
 
 .add-btn {
@@ -427,58 +426,44 @@ textarea::placeholder, input[type="email"]::placeholder {
 
 /* Form section styles */
 .form-section {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border-radius: 16px;
-    padding: 32px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-header {
-    margin-bottom: 32px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #e2e8f0;
-    position: relative;
-}
-
-.form-header::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 60px;
-    height: 2px;
-    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-    border-radius: 1px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .back-btn {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    border: 1px solid #cbd5e1;
-    color: #475569;
-    padding: 12px 20px;
-    border-radius: 12px;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    padding: 10px 12px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .back-btn:hover {
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-    border-color: #94a3b8;
+    background: #f8fafc;
+    border-color: #9ca3af;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 .back-btn span:first-child {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
 }
 
 .form-actions {
@@ -489,20 +474,30 @@ textarea::placeholder, input[type="email"]::placeholder {
 }
 
 .form-actions .primary-btn {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
+    background-color: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    padding: 12px 16px;
+    border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     min-width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    height: 44px;
 }
 
 .form-actions .primary-btn:hover {
-    background: #2563eb;
+    background-color: #f8fafc;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 /* Form section headers */
@@ -654,71 +649,51 @@ textarea::placeholder, input[type="email"]::placeholder {
 .remove-exp-btn,
 .remove-proj-btn {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    top: 12px;
+    right: 12px;
+    background: #ef4444;
     color: white;
     border: none;
-    border-radius: 8px;
-    width: 32px;
-    height: 32px;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
     cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
-    z-index: 10;
+    transition: all 0.2s ease;
 }
 
 .remove-exp-btn:hover,
 .remove-proj-btn:hover {
-    background: linear-gradient(135deg, #dc2626, #b91c1c);
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.4);
+    background: #dc2626;
 }
 
 /* Add buttons */
 .add-btn {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    border: 2px solid #cbd5e1;
-    color: #475569;
-    padding: 14px 20px;
-    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+    padding: 12px 16px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    width: 100%;
-    margin-top: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    position: relative;
-    overflow: hidden;
-}
-
-.add-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-    transition: left 0.5s ease;
-}
-
-.add-btn:hover::before {
-    left: 100%;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    width: auto;
+    min-width: 200px;
+    margin: 12px auto 8px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: block;
 }
 
 .add-btn:hover {
-    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-    border-color: #94a3b8;
+    background: #f8fafc;
+    border-color: #9ca3af;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    color: #1e293b;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 /* Responsive design for form */

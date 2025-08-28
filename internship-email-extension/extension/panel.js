@@ -17,7 +17,7 @@ class EmailGeneratorPanel {
         this.clearButton = document.getElementById('clearAll');
         this.openOutlookWebButton = document.getElementById('openOutlookWeb');
         this.openOutlookDesktopButton = document.getElementById('openOutlookDesktop');
-        this.addAttachmentButton = document.getElementById('addAttachment');
+
         this.updateInfoButton = document.getElementById('updateInfoBtn');
         this.emailOutput = document.getElementById('emailOutput');
         this.statusMessage = document.getElementById('statusMessage');
@@ -42,7 +42,7 @@ class EmailGeneratorPanel {
         this.clearButton.addEventListener('click', () => this.clearAll());
         this.openOutlookWebButton.addEventListener('click', () => this.openInOutlookWeb());
         this.openOutlookDesktopButton.addEventListener('click', () => this.openInOutlookDesktop());
-        this.addAttachmentButton.addEventListener('click', () => this.addAttachment());
+
         this.updateInfoButton.addEventListener('click', () => this.showUpdateInfoModal());
         
         // Panel switching events
@@ -91,7 +91,7 @@ class EmailGeneratorPanel {
             const result = await chrome.storage.local.get(['personalInfo']);
             const personalInfo = result.personalInfo || null;
             
-            console.log("🔍 DEBUG: Retrieved personal info for email generation:", personalInfo);
+    
 
             const requestBody = { job_posting: jobPosting };
             if (additionalContext) {
@@ -100,13 +100,9 @@ class EmailGeneratorPanel {
             if (existingEmail) {
                 requestBody.existing_email = existingEmail;
             }
-            if (personalInfo) {
+                        if (personalInfo) {
                 requestBody.personal_info = personalInfo;
-                console.log("✅ Personal info will be included in email generation");
-            } else {
-                console.log("⚠️ No personal info found, using default");
-            }
-            
+            }            
             const response = await fetch(`${this.backendUrl}/generate-email`, {
                 method: 'POST',
                 headers: {
@@ -167,12 +163,7 @@ class EmailGeneratorPanel {
 
         const recipientEmail = this.recipientEmailInput.value.trim();
         
-        // Debug logging
-        console.log('=== OUTLOOK WEB DEBUG ===');
-        console.log('Subject:', this.currentSubject);
-        console.log('Body:', this.currentBody);
-        console.log('Recipient email:', recipientEmail);
-        console.log('====================');
+
         
         // Try Outlook Web
         this.tryOutlookWeb(this.currentSubject, this.currentBody, recipientEmail);
@@ -186,12 +177,7 @@ class EmailGeneratorPanel {
 
         const recipientEmail = this.recipientEmailInput.value.trim();
         
-        // Debug logging
-        console.log('=== OUTLOOK DESKTOP DEBUG ===');
-        console.log('Subject:', this.currentSubject);
-        console.log('Body:', this.currentBody);
-        console.log('Recipient email:', recipientEmail);
-        console.log('====================');
+
         
         // Use mailto protocol for desktop Outlook
         this.fallbackToMailto(this.currentSubject, this.currentBody, recipientEmail);
@@ -202,12 +188,7 @@ class EmailGeneratorPanel {
         const toParam = recipientEmail ? `&to=${encodeURIComponent(recipientEmail)}` : '';
         const outlookWebUrl = `https://outlook.office.com/mail/deeplink/compose?${toParam}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         
-        // Debug logging
-        console.log('=== OUTLOOK OFFICE 365 URL DEBUG ===');
-        console.log('Generated URL:', outlookWebUrl);
-        console.log('Subject param:', encodeURIComponent(subject));
-        console.log('Body param:', encodeURIComponent(body));
-        console.log('========================');
+
         
         try {
             const outlookWindow = window.open(outlookWebUrl, '_blank');
@@ -392,7 +373,7 @@ class EmailGeneratorPanel {
                 this.populateForm(data);
             }
         } catch (error) {
-            console.log('No existing personal info found, starting with empty form');
+
         }
     }
 
@@ -484,7 +465,7 @@ class EmailGeneratorPanel {
         };
 
         // Debug print
-        console.log("🔍 DEBUG: Saving personal info:", personalInfo);
+
 
         // Collect experience
         const expRoles = formData.getAll('expRole[]');
@@ -516,12 +497,12 @@ class EmailGeneratorPanel {
 
         try {
             // Save to Chrome storage
-            console.log("💾 Saving to Chrome storage...");
+    
             await chrome.storage.local.set({ personalInfo: personalInfo });
-            console.log("✅ Saved to Chrome storage successfully");
+            
             
             // Save to backend
-            console.log("💾 Saving to backend...");
+
             const response = await fetch(`${this.backendUrl}/update-personal-info`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -531,7 +512,7 @@ class EmailGeneratorPanel {
             if (!response.ok) {
                 throw new Error('Failed to save to backend');
             }
-            console.log("✅ Saved to backend successfully");
+
 
             this.showStatus('Personal information saved successfully!', 'success');
             this.showMainContent();
